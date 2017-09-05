@@ -8,10 +8,13 @@ document.addEventListener('DOMContentLoaded', function() {
   let color;
   let direction = 'right';
   let gameLoop;
+  let foodX;
+  let foodY;
 
   // Start and reset game
   function initGame() {
     createSnake();
+    createFood();
     direction = 'right';
     color = randomizeColors()
     if(gameLoop) {
@@ -54,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
     else if(direction === 'down') {
       snakeY++;
     }
-    console.log(snakeY)
     if(snakeX === -1 || snakeY === -1 || snakeX === w/cellSize || snakeY === h/cellSize) {
       initGame()
       return
@@ -69,11 +71,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     for(let i = 0; i < snakeArray.length; i++) {
       const cell = snakeArray[i];
-      ctx.fillStyle =  color; 
-      ctx.fillRect(cell.x * 20, cell.y * 20, 20, 20);
-      ctx.strokeStyle = 'white';
-      ctx.strokeRect(cell.x * 20, cell.y * 20, 20, 20);
+      paintCell(cell.x * 20, cell.y * 20, cellSize, cellSize);
     }
+
+    // Paint food
+    paintCell(foodX, foodY, cellSize, cellSize);
   }
 
   document.onkeydown = function(e) {
@@ -100,6 +102,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         break;
     } 
+  }
+
+  // Generate random X and Y coordinate for food
+  function createFood() {
+    foodX = Math.round(Math.random() * (w - cellSize)/20)*20;
+    foodY = Math.round(Math.random() * (h - cellSize)/20)*20;
+    console.log(foodX, foodY)
+  }
+
+  function paintCell(x, y, w, h) {
+    ctx.fillStyle = color; 
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = 'white';
+    ctx.strokeRect(x, y, w, h);
   }
 
   function randomizeColors() {
