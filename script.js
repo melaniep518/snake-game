@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const h = canvas.height;
   const cellSize = 20;
   let snakeArray;
+  let color;
   let direction = 'right';
   let gameLoop;
 
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function initGame() {
     createSnake();
     direction = 'right';
+    color = randomizeColors()
     if(gameLoop) {
       clearInterval(gameLoop)
     }
@@ -67,12 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     for(let i = 0; i < snakeArray.length; i++) {
       const cell = snakeArray[i];
-      if(i === 0) {
-        ctx.fillStyle = 'red'
-      }
-      else {
-        ctx.fillStyle = 'pink'; 
-      }
+      ctx.fillStyle =  color; 
       ctx.fillRect(cell.x * 20, cell.y * 20, 20, 20);
       ctx.strokeStyle = 'white';
       ctx.strokeRect(cell.x * 20, cell.y * 20, 20, 20);
@@ -103,6 +100,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         break;
     } 
+  }
+
+  function randomizeColors() {
+    let r = Math.round(Math.random() * 255);
+    let g = Math.round(Math.random() * 255);
+    let b = Math.round(Math.random() * 255);
+
+    return `rgb(${r}, ${g}, ${b})`
   }
 
 })
