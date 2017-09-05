@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
       clearInterval(gameLoop)
     }
     gameLoop = setInterval(paintSnake, 200)
-    console.log(gameLoop)
   }
 
   initGame()
@@ -58,24 +57,30 @@ document.addEventListener('DOMContentLoaded', function() {
       snakeY++;
     }
     if(snakeX === -1 || snakeY === -1 || snakeX === w/cellSize || snakeY === h/cellSize) {
-      initGame()
-      return
+      initGame();
+      return;
     }
 
-    // Pop tail of snake array and move it to the "head" of the snake, update x or y coordinate to generate movement
-    const tail = snakeArray.pop();
-    tail.x = snakeX;
-    tail.y = snakeY;
-    snakeArray.unshift(tail)
-
+    if(snakeX === foodX && snakeY === foodY) {
+      let tail = {x: snakeX, y: snakeY}
+      snakeArray.unshift(tail)
+      createFood()
+    }
+    else {
+      // Pop tail of snake array and move it to the "head" of the snake, update x or y coordinate to generate movement
+      let tail = snakeArray.pop();
+      tail.x = snakeX;
+      tail.y = snakeY;
+      snakeArray.unshift(tail)
+    }
 
     for(let i = 0; i < snakeArray.length; i++) {
       const cell = snakeArray[i];
-      paintCell(cell.x * 20, cell.y * 20, cellSize, cellSize);
+      paintCell(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize);
     }
 
     // Paint food
-    paintCell(foodX, foodY, cellSize, cellSize);
+    paintCell(foodX * cellSize, foodY * cellSize, cellSize, cellSize);
   }
 
   document.onkeydown = function(e) {
@@ -87,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function() {
         break;
       case 37:
         if(direction !== 'right') {
-          console.log(direction)
           direction = 'left';  
         }
         break;
@@ -106,9 +110,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Generate random X and Y coordinate for food
   function createFood() {
-    foodX = Math.round(Math.random() * (w - cellSize)/20)*20;
-    foodY = Math.round(Math.random() * (h - cellSize)/20)*20;
-    console.log(foodX, foodY)
+    foodX = Math.round(Math.random() * (w - cellSize)/cellSize);
+    foodY = Math.round(Math.random() * (h - cellSize)/cellSize);
   }
 
   function paintCell(x, y, w, h) {
