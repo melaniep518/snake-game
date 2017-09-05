@@ -10,20 +10,22 @@ document.addEventListener('DOMContentLoaded', function() {
   let gameLoop;
   let foodX;
   let foodY;
+  let score;
 
   // Start and reset game
   function initGame() {
     createSnake();
     createFood();
     direction = 'right';
-    color = randomizeColors()
+    color = randomizeColors();
+    score = 0;
     if(gameLoop) {
-      clearInterval(gameLoop)
+      clearInterval(gameLoop);
     }
-    gameLoop = setInterval(paintSnake, 200)
+    gameLoop = setInterval(paintSnake, 80);
   }
 
-  initGame()
+  initGame();
 
   // Create an array of the x and y coordinates of our snake 
   function createSnake() {
@@ -62,9 +64,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if(snakeX === foodX && snakeY === foodY) {
+      console.log('SCORE:', score)
       let tail = {x: snakeX, y: snakeY}
       snakeArray.unshift(tail)
       createFood()
+      score++
     }
     else {
       // Pop tail of snake array and move it to the "head" of the snake, update x or y coordinate to generate movement
@@ -81,6 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Paint food
     paintCell(foodX * cellSize, foodY * cellSize, cellSize, cellSize);
+
+    // Paint score
+    ctx.font = '20px Arial';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.fillText(`Score: ${score}`, 10, 580);
   }
 
   document.onkeydown = function(e) {
