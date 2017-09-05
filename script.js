@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     createSnake();
     createFood();
     direction = 'right';
-    color = randomizeColors();
+    color = generateRandomColor();
     score = 0;
     if(gameLoop) {
       clearInterval(gameLoop);
@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if(snakeX === foodX && snakeY === foodY) {
-      console.log('SCORE:', score)
       let tail = {x: snakeX, y: snakeY}
       snakeArray.unshift(tail)
       createFood()
@@ -119,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Generate random X and Y coordinate for food
   function createFood() {
+    // color = randomizeColors()
     foodX = Math.round(Math.random() * (w - cellSize)/cellSize);
     foodY = Math.round(Math.random() * (h - cellSize)/cellSize);
   }
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ctx.strokeRect(x, y, w, h);
   }
 
-  function randomizeColors() {
+  function generateRandomColor() {
     let r = Math.round(Math.random() * 255);
     let g = Math.round(Math.random() * 255);
     let b = Math.round(Math.random() * 255);
