@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
   const w = canvas.width;
@@ -12,8 +12,66 @@ document.addEventListener('DOMContentLoaded', function() {
   let foodY;
   let score;
 
+  document.onkeydown = (e) => {
+    switch (e.code) {
+      case 'ArrowRight': 
+        if(direction !== 'left') {
+          direction = 'right'; 
+        }
+        break;
+      case 'ArrowLeft':
+        if(direction !== 'right') {
+          direction = 'left';  
+        }
+        break;
+      case 'ArrowDown': 
+        if(direction !== 'up') {
+          return direction = 'down';
+        }
+        break;
+      case 'ArrowUp': 
+        if(direction !== 'down') {
+          return direction = 'up';
+        }
+        break;
+      case 'Space':
+        initGame();
+        break;
+    } 
+  }
+
+  // Create an array of the x and y coordinates of our snake 
+  const createSnake = () => {
+    const length = 4;
+    snakeArray = [];
+    for(let i = 0; i < length; i++) {
+      snakeArray.push({x: i, y: 0});
+    }
+  }
+
+  // Generate random X and Y coordinate for food
+  const createFood = () => {
+    foodX = Math.round(Math.random() * (w - cellSize)/cellSize);
+    foodY = Math.round(Math.random() * (h - cellSize)/cellSize);
+  }
+
+  const generateRandomColor = () => {
+    let r = Math.round(Math.random() * 255);
+    let g = Math.round(Math.random() * 255);
+    let b = Math.round(Math.random() * 255);
+
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  const paintCell = (x, y, w, h) => {
+    ctx.fillStyle = color; 
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = 'white';
+    ctx.strokeRect(x, y, w, h);
+  }
+
   // Start and reset game
-  function initGame() {
+  const initGame = () => {
     createSnake();
     createFood();
     direction = 'right';
@@ -22,22 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if(gameLoop) {
       clearInterval(gameLoop);
     }
-    gameLoop = setInterval(paintSnake, 80);
-  }
-
-  initGame();
-
-  // Create an array of the x and y coordinates of our snake 
-  function createSnake() {
-    const length = 4;
-    snakeArray = [];
-    for(let i = 0; i < length; i++) {
-      snakeArray.push({x: i, y: 0});
-    }
+    gameLoop = setInterval(paintSnake, 300);
   }
 
   // Draw the snake
-  function paintSnake() {
+  const paintSnake = () => {
     // Redraw background in every loop to hide trail
     ctx.fillStyle = 'lightgrey';
     ctx.fillRect(0, 0, w, h);
@@ -64,17 +111,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if(snakeX === foodX && snakeY === foodY) {
-      let tail = {x: snakeX, y: snakeY}
-      snakeArray.unshift(tail)
-      createFood()
-      score++
+      let tail = {x: snakeX, y: snakeY};
+      snakeArray.unshift(tail);
+      createFood();
+      score++;
     }
     else {
       // Pop tail of snake array and move it to the "head" of the snake, update x or y coordinate to generate movement
       let tail = snakeArray.pop();
       tail.x = snakeX;
       tail.y = snakeY;
-      snakeArray.unshift(tail)
+      snakeArray.unshift(tail);
     }
 
     for(let i = 0; i < snakeArray.length; i++) {
@@ -89,53 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
     ctx.font = '20px Arial';
     ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
     ctx.fillText(`Score: ${score}`, 10, 580);
-  }
-
-  document.onkeydown = function(e) {
-    switch (e.keyCode) {
-      case 39: 
-        if(direction !== 'left') {
-          direction = 'right'; 
-        }
-        break;
-      case 37:
-        if(direction !== 'right') {
-          direction = 'left';  
-        }
-        break;
-      case 40: 
-        if(direction !== 'up') {
-          return direction = 'down';
-        }
-        break;
-      case 38: 
-        if(direction !== 'down') {
-          return direction = 'up';
-        }
-        break;
-    } 
-  }
-
-  // Generate random X and Y coordinate for food
-  function createFood() {
-    // color = randomizeColors()
-    foodX = Math.round(Math.random() * (w - cellSize)/cellSize);
-    foodY = Math.round(Math.random() * (h - cellSize)/cellSize);
-  }
-
-  function paintCell(x, y, w, h) {
-    ctx.fillStyle = color; 
-    ctx.fillRect(x, y, w, h);
-    ctx.strokeStyle = 'white';
-    ctx.strokeRect(x, y, w, h);
-  }
-
-  function generateRandomColor() {
-    let r = Math.round(Math.random() * 255);
-    let g = Math.round(Math.random() * 255);
-    let b = Math.round(Math.random() * 255);
-
-    return `rgb(${r}, ${g}, ${b})`
   }
 
 })
