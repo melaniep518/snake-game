@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const createSnake = () => {
     const length = 4;
     snakeArray = [];
-    for(let i = 0; i < length; i++) {
+    for(let i = length-1; i >= 0; i--) {
       snakeArray.push({x: i, y: 0});
     }
   }
@@ -70,7 +70,16 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.strokeRect(x, y, w, h);
   }
 
-  // Start and reset game
+  // Check if the snake has collided into its own body
+  const checkCollision = (x, y, arr) => {
+    for(var i = 0; i < arr.length; i++) {
+      if(arr[i].x == x && arr[i].y == y)
+        return true;
+      }
+    return false;
+  }
+
+  // Start or reset game
   const initGame = () => {
     createSnake();
     createFood();
@@ -80,11 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if(gameLoop) {
       clearInterval(gameLoop);
     }
-    gameLoop = setInterval(paintSnake, 300);
+    // Paint function is looped to simulate movement
+    gameLoop = setInterval(paintGame, 80);
   }
 
-  // Draw the snake
-  const paintSnake = () => {
+  // Draw the game
+  const paintGame = () => {
     // Redraw background in every loop to hide trail
     ctx.fillStyle = 'lightgrey';
     ctx.fillRect(0, 0, w, h);
@@ -105,25 +115,29 @@ document.addEventListener('DOMContentLoaded', () => {
     else if(direction === 'down') {
       snakeY++;
     }
-    if(snakeX === -1 || snakeY === -1 || snakeX === w/cellSize || snakeY === h/cellSize) {
+
+    // If the snake hits the walls or collides with itself reset the game
+    if(snakeX === -1 || snakeY === -1 || snakeX === w/cellSize || snakeY === h/cellSize || checkCollision(snakeX, snakeY, snakeArray)) {
       initGame();
       return;
     }
-
+    
+    // If the snake hits food, increment snakeArray by creating a new head
     if(snakeX === foodX && snakeY === foodY) {
       let tail = {x: snakeX, y: snakeY};
       snakeArray.unshift(tail);
       createFood();
       score++;
     }
+    // Otherwise, pop tail of snake array and move it to the "head" of the snake, update x or y coordinate to move snake
     else {
-      // Pop tail of snake array and move it to the "head" of the snake, update x or y coordinate to generate movement
       let tail = snakeArray.pop();
       tail.x = snakeX;
       tail.y = snakeY;
       snakeArray.unshift(tail);
     }
 
+    // Paint snake
     for(let i = 0; i < snakeArray.length; i++) {
       const cell = snakeArray[i];
       paintCell(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize);
@@ -136,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.font = '20px Arial';
     ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
     ctx.fillText(`Score: ${score}`, 10, 580);
+
   }
 
 })
