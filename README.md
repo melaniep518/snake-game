@@ -4,4 +4,4 @@
 
 Play the game [here](https://melaniep518.github.io/snake-game/)!
 
-<img src="/snake-screenshot.png" width="100">
+<img src="/snake-screenshot.png" width="400">
