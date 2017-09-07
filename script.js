@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let foodY;
   let score;
 
+  // Keyboard events
   document.onkeydown = (e) => {
     switch (e.code) {
       case 'ArrowRight': 
@@ -102,7 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
     return false;
   }
 
-  // Start or reset game
+/**
+  *  Starts the game or resets if a current game is in progress
+  */
   const initGame = () => {
     createSnake();
     createFood();
@@ -112,20 +115,50 @@ document.addEventListener('DOMContentLoaded', () => {
     if(gameLoop) {
       clearInterval(gameLoop);
     }
-    // Paint function is looped to simulate movement
+  /**
+    *  paintGame is looped to simulate movement
+    */   
     gameLoop = setInterval(paintGame, 80);
   }
 
-  // Draw the game
+ /**
+   *  Draws game on canvas
+   */  
   const paintGame = () => {
-    // Redraw background in every loop to hide trail
+  /**
+    *  To "move" the snake, the head of the snake is being repositioned and 
+    *  redrawn every time paintGame is looped over
+    *  
+    *  Redraw the background to cover up the previous thereby erasing the trail
+    *  left behind as the snake moves
+    */
     ctx.fillStyle = 'lightgrey';
     ctx.fillRect(0, 0, w, h);
-
+    
+  /**
+    *  To move the snake:  
+    *  
+    *  Each time we loop paintGame create a new head by removing
+    *  the tail of the snake
+    *  
+    *  Give the tail a new x or y coordinate depending on the direction of movement
+    *  
+    *  Then make it the head of the snake by adding it back to the array as the first index
+    *  
+    *  Every index in the array will be looped from the last index the first index, this is 
+    *  how movement is simulated
+    */
     let snakeX = snakeArray[0].x;
     let snakeY = snakeArray[0].y;
     
-    // Determine the direction of movement
+  /**
+    *  Determine the direction of movement
+    *  If the movement is right or left move the head positively or negatively 
+    *  along the x axis
+    *  
+    *  If the movement is up or down move the head negatively or positively 
+    *  along the y axis
+    */
     if(direction === 'right') {
       snakeX++;
     }
@@ -139,20 +172,28 @@ document.addEventListener('DOMContentLoaded', () => {
       snakeY++;
     }
 
-    // If the snake hits the walls or collides with itself reset the game
+  /**
+    * If the snake hits the walls or collides with its own body, restart the game
+    */
     if(snakeX === -1 || snakeY === -1 || snakeX === w/cellSize || snakeY === h/cellSize || checkCollision(snakeX, snakeY, snakeArray)) {
       initGame();
       return;
     }
     
-    // If the snake hits food, increment snakeArray by creating a new head
+  /**  
+    *  If the snake hits food, create a new head and add it to the snake array
+    *  Create new food, increase the score
+    */
     if(snakeX === foodX && snakeY === foodY) {
-      let tail = {x: snakeX, y: snakeY};
-      snakeArray.unshift(tail);
+      let head = {x: snakeX, y: snakeY};
+      snakeArray.unshift(head);
       createFood();
       score++;
     }
-    // Otherwise, pop tail of snake array and move it to the "head" of the snake, update x or y coordinate to move snake
+  /**  
+    *  Otherwise, pop tail of snake array, give it new x or y coordinate,
+    *  depending on direction of movement, and make it the new head of the snake 
+    */ 
     else {
       let tail = snakeArray.pop();
       tail.x = snakeX;
