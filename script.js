@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       clearInterval(gameLoop);
     }
     // Paint function is looped to simulate movement
-    gameLoop = setInterval(paintGame, 400);
+    gameLoop = setInterval(paintGame, 80);
   }
 
   // Draw the game
