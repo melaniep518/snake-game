@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       clearInterval(gameLoop);
     }
     // Paint function is looped to simulate movement
-    gameLoop = setInterval(paintGame, 80);
+    gameLoop = setInterval(paintGame, 400);
   }
 
   // Draw the game
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
       initGame();
       return;
     }
-    
+
     // If the snake hits food, increment snakeArray by creating a new head
     if(snakeX === foodX && snakeY === foodY) {
       let tail = {x: snakeX, y: snakeY};
