@@ -40,7 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
     } 
   }
 
-  // Create an array of the x and y coordinates of our snake 
+  /**  
+    *  Creates an array of the x and y coordinates of each cell in the snake
+    *
+    *  Based on these coordinates the snake will be positioned at the top
+    *  left of the canvas
+    *  
+    *  paintCell function will use these coordinates to draw the snake on the canvas
+    */
   const createSnake = () => {
     const length = 4;
     snakeArray = [];
@@ -49,12 +56,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Generate random X and Y coordinate for food
+  /**
+    *  Generate random x and y coordinates for the food 
+    *
+    *  paintCell will use these coordinates to draw food on the canvas
+    */
   const createFood = () => {
     foodX = Math.round(Math.random() * (w - cellSize)/cellSize);
     foodY = Math.round(Math.random() * (h - cellSize)/cellSize);
   }
 
+ /**
+   *  Generates a random color for each new snake game
+   */
   const generateRandomColor = () => {
     let r = Math.round(Math.random() * 255);
     let g = Math.round(Math.random() * 255);
@@ -63,6 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
     return `rgb(${r}, ${g}, ${b})`;
   }
 
+ /**
+   *  Uses the x and y coordinates provided by createSnake or createFood
+   *  to draw a cell on the canvas
+   */
   const paintCell = (x, y, w, h) => {
     ctx.fillStyle = color; 
     ctx.fillRect(x, y, w, h);
@@ -70,7 +88,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.strokeRect(x, y, w, h);
   }
 
-  // Check if the snake has collided into its own body
+/**  
+  *  Checks if the provided x and y coordinates are found in a given array
+  *  
+  *  Used in the paintGame function to check if the head of the snake has
+  *  overlapped with any of the cells in the body of the snake
+  */
   const checkCollision = (x, y, arr) => {
     for(var i = 0; i < arr.length; i++) {
       if(arr[i].x == x && arr[i].y == y)
@@ -121,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
       initGame();
       return;
     }
-
+    
     // If the snake hits food, increment snakeArray by creating a new head
     if(snakeX === foodX && snakeY === foodY) {
       let tail = {x: snakeX, y: snakeY};
