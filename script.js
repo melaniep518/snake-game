@@ -161,12 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ** coordinates of some index in the array, false otherwise 
     ** 
     *************************************************************************/
+
   const checkCollision = (x, y, arr) => {
-    for(var i = 0; i < arr.length; i++) {
-      if(arr[i].x == x && arr[i].y == y)
-        return true;
-      }
-    return false;
+    return arr.some((ele) => {
+      return ele.x == x && ele.y == y;
+    })
   }
 
 /**************************************************************************  
@@ -277,11 +276,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //  Draw snake and food based on given x and y coordinates
-
-    for(let i = 0; i < snakeArray.length; i++) {
-      const cell = snakeArray[i];
+    snakeArray.forEach((cell) => {
       paintCell(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize);
-    }
+    })
 
     paintCell(foodX * cellSize, foodY * cellSize, cellSize, cellSize);
 
